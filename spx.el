@@ -69,15 +69,15 @@
 
 (defun spx--at-beginning-of-sexp-p ()
   (let ((c (char-after)))
-    (or (= c spx--left-parenthesis)
-        (= c spx--left-brace)
-        (= c spx--left-bracket))))
+    (or (eql c spx--left-parenthesis)
+        (eql c spx--left-brace)
+        (eql c spx--left-bracket))))
 
 (defun spx--at-end-of-sexp-p ()
   (let ((c (char-before)))
-    (or (= c spx--right-parenthesis)
-        (= c spx--right-brace)
-        (= c spx--right-bracket))))
+    (or (eql c spx--right-parenthesis)
+        (eql c spx--right-brace)
+        (eql c spx--right-bracket))))
 
 (defun spx--at-either-side-of-sexp-p ()
   (or (spx--at-beginning-of-sexp-p)
