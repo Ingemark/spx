@@ -177,7 +177,22 @@ depending on the provided direction."
                 (forward-char)
                 (sp-backward-barf-sexp))))
 
-(defvar spx--indent-sexp (spx-action 'spx--at-beginning-of-sexp-p 'indent-pp-sexp))
+(defvar spx--indent-sexp
+  (spx-action 'spx--at-beginning-of-sexp-p 'indent-pp-sexp))
+
+(defvar spx--eval-last-sexp
+  (spx-action 'spx--at-end-of-sexp-p
+              (lambda ()
+                (if (eql major-mode 'clojure-mode)
+                    (cider-eval-last-sexp)
+                  (eval-last-sexp nil)))))
+
+(defvar spx--eval-defun
+  (spx-action 'spx--at-beginning-of-sexp-p
+              (lambda ()
+                (if (eql major-mode 'clojure-mode)
+                    (cider-eval-defun-at-point)
+                    (eval-defun nil)))))
 
 (defvar spx-mode-map (make-sparse-keymap))
 
@@ -192,7 +207,8 @@ depending on the provided direction."
   (define-key m (kbd "t") (spx-handler spx--transpose-sexp))
   (define-key m (kbd "<") (spx-handler spx--backward-slurp-sexp spx--forward-barf-sexp))
   (define-key m (kbd ">") (spx-handler spx--forward-slurp-sexp spx--backward-barf-sexp))
-  (define-key m (kbd "i") (spx-handler spx--indent-sexp)))
+  (define-key m (kbd "i") (spx-handler spx--indent-sexp))
+  (define-key m (kbd "e") (spx-handler spx--eval-last-sexp spx--eval-defun)))
 
 (define-minor-mode spx-mode
   "Minor mode for efficient keyboard bindings when standing on parenthesis/brackets/braces in Lisp editing modes.
